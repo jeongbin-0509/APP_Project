@@ -29,6 +29,7 @@ class _PlannerScreenState extends State<PlannerScreen> {
   final TextEditingController englishCurrent = TextEditingController();
   final TextEditingController englishTarget = TextEditingController();
   final TextEditingController dailyTime = TextEditingController();
+  final TextEditingController minTimeController = TextEditingController();
 
   double mathTime = 0;
   double englishTime = 0;
@@ -39,17 +40,35 @@ class _PlannerScreenState extends State<PlannerScreen> {
     int eCurrent = int.tryParse(englishCurrent.text) ?? 0;
     int eTarget = int.tryParse(englishTarget.text) ?? 0;
     int totalTime = int.tryParse(dailyTime.text) ?? 0;
+    double minTime = double.tryParse(minTimeController.text) ?? 0;
 
-    int mathGap = mTarget - mCurrent;
-    int englishGap = eTarget - eCurrent;
+    int mathGap = (mTarget - mCurrent).clamp(0, 100);
+    int englishGap = (eTarget - eCurrent).clamp(0, 100);
 
     int totalGap = mathGap + englishGap;
 
-    if (totalGap <= 0) return;
+    double totalMinTime = minTime * 2;
+
+    if (totalTime < totalMinTime) {
+      // 최소시간이 하루시간보다 크면 그냥 균등분배
+      setState(() {
+        mathTime = totalTime / 2;
+        englishTime = totalTime / 2;
+      });
+      return;
+    }
+
+    double remainingTime = totalTime - totalMinTime;
 
     setState(() {
-      mathTime = (mathGap / totalGap) * totalTime;
-      englishTime = (englishGap / totalGap) * totalTime;
+      if (totalGap == 0) {
+        // gap이 모두 0이면 최소시간만 유지
+        mathTime = minTime;
+        englishTime = minTime;
+      } else {
+        mathTime = minTime + (mathGap / totalGap) * remainingTime;
+        englishTime = minTime + (englishGap / totalGap) * remainingTime;
+      }
     });
   }
 
@@ -94,6 +113,12 @@ class _PlannerScreenState extends State<PlannerScreen> {
                 decoration: const InputDecoration(
                   labelText: "하루 공부 가능 시간 (시간 단위)",
                 ),
+              ),
+
+              TextField(
+                controller: minTimeController,
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(labelText: "과목당 최소 공부시간"),
               ),
 
               const SizedBox(height: 20),
