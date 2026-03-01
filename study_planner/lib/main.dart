@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:study_planner/screens/main_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'screens/main_screen.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Supabase.initialize(
+    url: 'https://ywtggdqwsdakkkhhcgqs.supabase.co',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dGdnZHF3c2Rha2traGhjZ3FzIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MjM3MzI5MiwiZXhwIjoyMDg3OTQ5MjkyfQ.I3aETgUwYQ9clcCvh4HqUqKkzhfBvPJCdFW__gbGIGY',
+  );
+
   runApp(const MyApp());
 }
 
@@ -10,11 +19,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: '성적설계',
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(useMaterial3: true),
-      home: const MainScreen(),
+      home: MainScreen(),
     );
   }
 }

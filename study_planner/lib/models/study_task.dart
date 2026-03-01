@@ -1,20 +1,36 @@
 class StudyTask {
   final String id;
-  String title;
-  int goalSeconds;
-  int doneSeconds;
+  final DateTime date;
+  final String title;
+  final int goalSeconds;
+  final int doneSeconds;
 
   StudyTask({
     required this.id,
+    required this.date,
     required this.title,
     required this.goalSeconds,
-    this.doneSeconds = 0,
+    required this.doneSeconds,
   });
 
-  bool get isCompleted => doneSeconds >= goalSeconds && goalSeconds > 0;
-
-  double get progress {
-    if (goalSeconds <= 0) return 0.0;
-    return (doneSeconds / goalSeconds).clamp(0.0, 1.0);
+  factory StudyTask.fromMap(Map<String, dynamic> map) {
+    return StudyTask(
+      id: map['id'],
+      date: DateTime.parse(map['date']),
+      title: map['title'],
+      goalSeconds: map['goal_seconds'],
+      doneSeconds: map['done_seconds'] ?? 0,
+    );
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'date': date.toIso8601String().split("T").first,
+      'title': title,
+      'goal_seconds': goalSeconds,
+      'done_seconds': doneSeconds,
+    };
+  }
+
+  bool get inCompleted => doneSeconds >= goalSeconds;
 }
