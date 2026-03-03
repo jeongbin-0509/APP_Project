@@ -17,11 +17,21 @@ Future<void> main() async {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
+    @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
+    return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      theme: ThemeData(
+        scaffoldBackgroundColor: const Color(0xFFF6F7F9),
+        primaryColor: const Color(0xFF0057FF),
+        fontFamily: 'Pretendard',
+        appBarTheme: const AppBarTheme(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          foregroundColor: Colors.black,
+        ),
+      ),
+      home: const MainScreen(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/study_task.dart';
 import '../services/task_service.dart';
 import 'timer_screen.dart';
+import '../widgets/card.dart';
 
 class PlannerScreen extends StatefulWidget {
   final DateTime selectedDate;
@@ -168,45 +169,34 @@ class _PlannerScreenState extends State<PlannerScreen> {
                       itemBuilder: (context, i) {
                         final task = _tasks[i];
 
-                        return Card(
-                          child: ListTile(
-                            title: Text(task.title),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text("목표: ${formatTime(task.goalSeconds)}"),
-                                Text("진행: ${formatTime(task.doneSeconds)}"),
-                                const SizedBox(height: 6),
-                                LinearProgressIndicator(
-                                  value: task.goalSeconds == 0
-                                      ? 0
-                                      : (task.doneSeconds / task.goalSeconds)
-                                            .clamp(0.0, 1.0),
-                                ),
-                              ],
-                            ),
-                            trailing: PopupMenuButton<String>(
-                              onSelected: (value) {
-                                if (value == "start") {
-                                  _startTimer(task);
-                                } else if (value == "delete") {
-                                  _deleteTask(task.id);
-                                }
-                              },
-                              itemBuilder: (context) => const [
-                                PopupMenuItem(
-                                  value: "start",
-                                  child: Text("공부 시작"),
-                                ),
-                                PopupMenuItem(
-                                  value: "delete",
-                                  child: Text("삭제"),
-                                ),
-                              ],
-                            ),
-                            onTap: () => _startTimer(task),
-                          ),
-                        );
+                        return TossCard(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        task.title,
+        style: const TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      const SizedBox(height: 10),
+      LinearProgressIndicator(
+        value: task.goalSeconds == 0
+            ? 0
+            : (task.doneSeconds / task.goalSeconds)
+                .clamp(0.0, 1.0),
+        minHeight: 6,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      const SizedBox(height: 10),
+      Text(
+        "${task.doneSeconds ~/ 60}분 / ${task.goalSeconds ~/ 60}분",
+        style: const TextStyle(color: Colors.grey),
+      ),
+    ],
+  ),
+);
                       },
                     ),
             ),

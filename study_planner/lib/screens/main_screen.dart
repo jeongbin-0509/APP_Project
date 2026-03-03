@@ -35,7 +35,7 @@ class _MainScreenState extends State<MainScreen> {
     }
   }
 
-  Widget _buildCurrentPage() {
+  Widget _buildPage() {
     switch (_selectedIndex) {
       case 0:
         return HomeScreen(selectedDate: _selectedDate);
@@ -44,7 +44,7 @@ class _MainScreenState extends State<MainScreen> {
       case 2:
         return StatsScreen(selectedDate: _selectedDate);
       default:
-        return PlannerScreen(selectedDate: _selectedDate);
+        return HomeScreen(selectedDate: _selectedDate);
     }
   }
 
@@ -59,21 +59,26 @@ class _MainScreenState extends State<MainScreen> {
         actions: [
           TextButton(
             onPressed: _changeDate,
-            child: Text(dateText, style: const TextStyle(color: Colors.white)),
-          ),
+            child: Text(
+              dateText,
+              style: const TextStyle(color: Colors.black),
+            ),
+          )
         ],
       ),
-      body: _buildCurrentPage(),
+      body: _buildPage(),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
+        selectedItemColor: const Color(0xFF0057FF),
+        unselectedItemColor: Colors.grey,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "홈"),
           BottomNavigationBarItem(
-            icon: Icon(Icons.edit_calendar),
-            label: "플래너",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.bar_chart), label: "통계"),
+              icon: Icon(Icons.home), label: "홈"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.edit_calendar), label: "플래너"),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.bar_chart), label: "통계"),
         ],
       ),
     );
